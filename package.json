@@ -1,0 +1,14 @@
+{
+  "name": "cpsc447final",
+  "version": "1.0.0",
+  "description": "",
+  "main": "js.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "vis": "^4.21.0"
+  }
+}
