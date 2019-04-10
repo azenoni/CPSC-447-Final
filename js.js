@@ -68,7 +68,7 @@ network.on( 'click', function(properties) {
     if (clickedEdges.length !== 0 && clickedNodes.length === 0) {
         var edge = edges.get(edge_ids)[0];
         changeEdgeBackground(edge);
-        // edges.update(edge);
+        // network.selectNodes([1], [true]);
     }
 
     console.log('clicked edges:', clickedEdges);
