@@ -83,11 +83,27 @@ network.on( 'click', function(properties) {
 });
 
 function startTransmission() {
+    var startNode = document.getElementById("start_node").value;
+    // console.log(startNode);
+    var endNode = document.getElementById("stop_node").value;
+    // console.log(endNode);
+    var delayTime = parseInt(document.getElementById("delay").value, 10);
+    // console.log(delayTime);
     if(!running)
-        trace_route([8, 3, 10, 2, 4, 5, 6, 9]);
+        trace_route([8, 3, 10, 2, 4, 5, 6, 9], delayTime);
 }
 
-async function trace_route(node_path) {
+// Returns if a value is a string
+function isString (value) {
+    return typeof value === 'string' || value instanceof String;
+}
+
+// Returns if a value is really a number
+function isNumber (value) {
+    return typeof value === 'number' && isFinite(value);
+    }
+
+async function trace_route(node_path, sTime) {
     running = true;
     removeAllHighlighting();
     var path = [];
@@ -95,14 +111,14 @@ async function trace_route(node_path) {
         path.push(nodeList[node_path[i]-1]);
     }
     for (var i = 0; i < path.length-1; i++) {
-        await sleep(1000);
+        await sleep(sTime);
         highlightAllEdges(path[i]);
-        await sleep(1000);
+        await sleep(sTime);
         let edge = findConnectingEdge(path[i], path[i+1]);
         removeAllHighlighting();
         highlightEdge(edge, 'red');
     }
-    await sleep(1000);
+    await sleep(sTime);
     removeAllHighlighting();
     path[path.length - 1]['color'] = 'red';
     nodes.update(path[path.length - 1]);
