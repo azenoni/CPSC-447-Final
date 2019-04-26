@@ -1,3 +1,5 @@
+
+
 // create an array with nodes
 
 let nodeList = [
@@ -180,4 +182,66 @@ function changeEdgeBackground(edge) {
     }
 }
 
+
+class Router {
+    constructor(name) {
+        this.name = name;
+        this.neighbors = {};
+        this.neighbors[name] = 0
+        this.nodes = {};
+        this.nodes[name] = 0
+        this.forwardingTable = {};
+        this.numNodes = 0;
+        this.dMatrix = [[0]]
+        this.updateEvents = []
+    }
+
+    addNeighbors(nieghbor, cost) {
+        if(!neighbor.name in this.neighbors) {
+            return;
+        }
+
+        this.numNodes += 1;
+        this.neighbors[neighbor.name] = cost
+        this.nodes[neighbor.name] = self.numNodes
+        this._addNeighborToMatrix(cost)
+        this._subscribeEvent(neighbor.update)
+    }
+
+    _addNeighborToMatrix(cost) {
+        this.dMatrix[0].push(cost);
+        emptyColumnRow = [];
+        for(var i=0; i<this.dMatrix[0].length; i++) {
+            emptyColumnRow.push(null);
+        }
+
+        for(var row=1; row<this.dMatrix.length; row++) {
+            this.dMatrix[row] = jQuery.extend(true, {}, emptyColumnRow)
+        }
+
+        this.dMatrix.push(jQuery.extend(true, {}, emptyColumnRow))
+    }
+
+    _subscribeEvent(event) {
+        this.updateEvents.push(event);
+    }
+
+    broadcast() {
+        for(var i=0; i<this.updateEvents.length; i++) {
+            this.updateEvents[i](this.name, this._generateRowCostMapping(this.name))
+        }
+    }
+
+    _generateRowCostMapping(name) {
+        return null;
+    }
+
+    update(src, updates) {
+        console.log(`updating ${this.name} from ${src}`)
+        return;
+    }
+}
+
+router = new Router("a")
+console.log(router)
 
