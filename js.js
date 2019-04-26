@@ -1,5 +1,3 @@
-
-
 // create an array with nodes
 
 let nodeList = [
@@ -186,7 +184,7 @@ class Router {
         this.updateEvents = []
     }
 
-    addNeighbors(nieghbor, cost) {
+    addNeighbors(neighbor, cost) {
         if(!neighbor.name in this.neighbors) {
             return;
         }
@@ -232,6 +230,31 @@ class Router {
     }
 }
 
-router = new Router("a")
-console.log(router)
+routerA = new Router("a");
+routerB = new Router("b");
+console.log(routerA);
 
+function routerLtoNum(router) {
+    return (router.name.charCodeAt(0)-96);
+}
+
+function routerNumtoL(number) {
+    return String.fromCharCode(number+96);
+}
+
+//Adds all neighbors to router form edges(EdgeList)
+function fillRouter(router) {
+    for (let i = 0; i < edges.length; i++) {
+        var tempEdge = edges.get(i+1);
+        if(tempEdge['to'] == routerLtoNum(router)) {
+            // router.addNeighbors(tempEdge['from'], parseInt(tempEdge['label']))
+            console.log("node id:", routerNumtoL(tempEdge['to']), "to", routerNumtoL(tempEdge['from']), "with cost=", parseInt(tempEdge['label']));
+        } else if (tempEdge['from'] == routerLtoNum(router)) {
+            // router.addNeighbors(tempEdge['to'], parseInt(tempEdge['label']))
+            console.log("node id:", routerNumtoL(tempEdge['from']), "to", routerNumtoL(tempEdge['to']), "with cost=", parseInt(tempEdge['label']));
+        }
+    }
+}
+
+fillRouter(routerA);
+fillRouter(routerB);
