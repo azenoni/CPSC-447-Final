@@ -86,24 +86,14 @@ network.on( 'click', function(properties) {
 
 function startTransmission() {
     var startNode = document.getElementById("start_node").value;
-    // console.log(startNode);
+    console.log(startNode);
     var endNode = document.getElementById("stop_node").value;
-    // console.log(endNode);
+    console.log(endNode);
     var delayTime = parseInt(document.getElementById("delay").value, 10);
-    // console.log(delayTime);
+    console.log(delayTime);
     if(!running)
         trace_route([8, 3, 10, 2, 4, 5, 6, 9], delayTime);
 }
-
-// Returns if a value is a string
-function isString (value) {
-    return typeof value === 'string' || value instanceof String;
-}
-
-// Returns if a value is really a number
-function isNumber (value) {
-    return typeof value === 'number' && isFinite(value);
-    }
 
 async function trace_route(node_path, sTime) {
     running = true;
