@@ -178,23 +178,38 @@ class Router {
         this.numNodes = 0;
         this.dMatrix = [[0]]
         this.updateEvents = []
+
+        // Hacky way to bind class context to each method
+        this.addNeighbor = this.addNeighbor.bind(this)
+        this.broadcast = this.broadcast.bind(this)
+        this.update = this.update.bind(this)
+        this._addNeighborToMatrix = this._addNeighborToMatrix.bind(this)
+        this._subscribeEvent = this._subscribeEvent.bind(this)
+        this._getCost = this._getCost.bind(this)
+        this._setCost = this._setCost.bind(this)
+        this._generateRowCostMapping = this._generateRowCostMapping.bind(this)
+        this._setDvForRouter = this._setDvForRouter.bind(this)
+        this._allocateNewBlankColumn = this._allocateNewBlankColumn.bind(this)
+        this._bellmanFordRouting = this._bellmanFordRouting.bind(this)
     }
 
-    addNeighbors(nieghbor, cost) {
-        if(!neighbor.name in this.neighbors) {
+    addNeighbor(neighbor, cost) {
+        if(neighbor.name in this.neighbors) {
             return;
         }
 
         this.numNodes += 1;
         this.neighbors[neighbor.name] = cost
         this.nodes[neighbor.name] = self.numNodes
-        this._addNeighborToMatrix(cost)
+        // this._addNeighborToMatrix(cost)
         this._subscribeEvent(neighbor.update)
+        this.forwardingTable[neighbor.name] = neighbor.name
+        neighbor.addNeighbor(this, cost)
     }
 
     _addNeighborToMatrix(cost) {
         this.dMatrix[0].push(cost);
-        emptyColumnRow = [];
+        var emptyColumnRow = [];
         for(var i=0; i<this.dMatrix[0].length; i++) {
             emptyColumnRow.push(null);
         }
@@ -210,22 +225,115 @@ class Router {
         this.updateEvents.push(event);
     }
 
+    _getCost(src, dest) {
+        return this.dMatrix[this.nodes[src]][this.nodes[dest]];
+    }
+
+    _setCost(src, dest, newCost) {
+        this.dMatrix[this.nodes[src]][this.nodes[dest]] = newCost;
+    }
+
     broadcast() {
         for(var i=0; i<this.updateEvents.length; i++) {
             this.updateEvents[i](this.name, this._generateRowCostMapping(this.name))
         }
     }
 
-    _generateRowCostMapping(name) {
-        return null;
+    _generateRowCostMapping(src) {
+        var rowCostMapping = {};
+        var nodesKeys = Object.keys(this.nodes);
+        var dest = null;
+        for(var i=0; i<nodesKeys; i++) {
+            dest = this.nodes[nodeskeys[i]]
+            rowCostMapping[dest] = this._getCost(src, dest);
+        }
+        return rowCostMapping;
+    }
+
+    _setDvForRouter(routerName, dvValues) {
+        dvValuesKeys = Object.keys(dvValues);
+        var dv = null;
+        for(var i=0; i<dvValuesKeys.length; i++) {
+            dv = dvValuesKeys[i];
+            if(!this.nodes.includes(dv)) {
+                this.allocate_new_blank_column(dv);
+            }
+            this._setCost(routerName, dv, dvValues[dv])
+        }
+    }
+
+    _allocateNewBlankColumn(node) {
+        this.numNodes += 1;
+        this.nodes[node] = this.numNodes;
+        for(var i=0; i<this.dMatrix.length; i++) {
+            this.dMatrix[i].push(null);
+        }
+    }
+
+    _bellmanFordRouting() {
+        var updated = false;
+        var nodesKeys = Object.keys(this.nodes);
+        var neighborsKeys = Object.keys(this.neighbors);
+        var bellmanFordOptions = null;
+        var optionsKeys = null;
+        var src = null;
+        var newMin = null;
+        for(var i=0; i<nodesKeys.length; i++) {
+            dest = nodesKeys[i];
+            if(dest === this.name) {
+                continue;
+            }
+
+            bellmanFordOptions = {}
+            for(var i=0; i<neighborsKeys.length; i++) {
+                src = neighborsKeys[i]
+                if(src === self.name || this._getCost(src, dest) === null) {
+                    continue;
+                }
+                bellmanFordOptions[src] = this.neighbors[src] + this._getCost(src, dest);
+            }
+
+            if(Object.keys(bellmanFordOptions).length === 0 && bellmanFordOptions.constructor === Object) {
+                continue;
+            }
+
+            optionsKeys = Object.keys(bellmanFordOptions);
+            newMin = null;
+            for(var i=0; i<optionsKeys.length; i++) {
+                if(!newMin || bellmanFordOptions[optionsKeys[i]] < bellmanFordOptions[newMin]){
+                    newMin = optionsKeys[i];
+                }
+            }
+
+            if(this._getCost(this.name, dest) === null || bellmanFordOptions[newMin] < this._getCost(this.name, dest)) {
+                this._setCost(this.name, dest, bellmanFordOptions[newMin]);
+                this.forwardingTable[dest] = newMin;
+                updated = true;
+            }
+        }
+        return updated;
+
     }
 
     update(src, updates) {
         console.log(`updating ${this.name} from ${src}`)
+        
         return;
     }
 }
 
-router = new Router("a")
-console.log(router)
+prnt = console.log
+
+a = new Router("a")
+b = new Router("b")
+prnt(a)
+prnt(b)
+
+a.addNeighbor(b, 3)
+
+prnt(a)
+prnt(b)
+
+a.broadcast()
+b.broadcast()
 
