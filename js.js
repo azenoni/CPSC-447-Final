@@ -358,6 +358,10 @@ class Router {
         this._resetDMatrixRowToDefault();
         this.update(this.name, {})
     }
+
+    removeRouter(router) {
+        return;
+    }
 }
 
 prnt = console.log
