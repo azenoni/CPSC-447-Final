@@ -161,7 +161,7 @@ function removeAllHighlighting() {
 
 function updateLink() {
     var startNode = lToNum(document.getElementById("start_node_link").value);
-    var endNode = lToNum(document.getElementById("end_node_link").value);
+    var endNode = lToNum(document.getElementById("stop_node_link").value);
     var linkVal = document.getElementById("new_link").value;
     for(var i = 0; i < edgeList.length; i++) {
         if (edgeList.get(i)["from"] == startNode && edgeList.get(i)['to'] == endNode) {
