@@ -159,6 +159,36 @@ function removeAllHighlighting() {
     }
 }
 
+function updateLink() {
+    var startNode = routerLtoNum(document.getElementById("start_node_link").value);
+    var endNode = routerLtoNum(document.getElementById("end_node_link").value);
+    var linkVal = document.getElementById("new_link").value;
+    for(var i = 0; i < edgeList.length; i++) {
+        if (edgeList.get(i)["from"] == startNode && edgeList.get(i)['to'] == endNode) {
+            updateLinkCost(edgeList.get(i), linkVal);
+            break;
+        } else if (edgeList.get(i)["to"] == startNode && edgeList.get(i)['from'] == endNode) {
+            updateLinkCost(edgeList.get(i), linkVal);
+            break;
+        }
+    }
+}
+
+function updateLinkCost(edge, new_val) {
+    edge.label = new_val;
+    edges.update(edge);
+}
+
+function addNode(node, edges) {
+    nodeList.addNode(node, edges)
+    nodes.update()
+    network.redraw()
+}
+
+function removeNode(node) {
+    nodeList.removeNode(node);
+}
+
 
 function changeEdgeBackground(edge) {
     edge['font']['background'] = 'lime';
