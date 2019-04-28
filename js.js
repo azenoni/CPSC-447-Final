@@ -1,5 +1,5 @@
 // create an array with nodes
-
+prnt = console.log
 let nodeList = [
     {id: 1, label: 'A'},
     {id: 2, label: 'B'},
@@ -31,7 +31,7 @@ let edgeList = [
     {id: 3, from: 10, to: 4, label:"4", font:edgeFont, color: edgeColor},
     {id: 4, from: 2, to: 4, label:"1", font:edgeFont, color: edgeColor},
     {id: 5, from: 2, to: 10, label: "9", font: edgeFont, color: edgeColor},
-    {id: 6, from: 3, to: 10, label: "4", font: edgeFont, color: edgeColor},
+    {id: 6, from: 3, to: 10, label: "1", font: edgeFont, color: edgeColor},
     {id: 7, from: 6, to: 9, label:"10", font:edgeFont, color: edgeColor},
     {id: 8, from: 14, to: 5, label:"7", font:edgeFont, color: edgeColor},
     {id: 9, from: 11, to: 3, label: "6", font: edgeFont, color: edgeColor},
@@ -82,15 +82,16 @@ network.on( 'click', function(properties) {
     // console.log('clicked edges:', clickedEdges);
 });
 
-function startTransmission() {
-    var startNode = document.getElementById("start_node").value;
-    console.log(startNode);
-    var endNode = document.getElementById("stop_node").value;
-    console.log(endNode);
-    var delayTime = parseInt(document.getElementById("delay").value, 10);
-    console.log(delayTime);
-    if(!running)
-        trace_route([8, 3, 10, 2, 4, 5, 6, 9], delayTime);
+function routerLtoNum(router) {
+    return (router.name.charCodeAt(0)-96);
+}
+
+function lToNum(letter) {
+    return letter.charCodeAt(0)-96;
+}
+
+function routerNumtoL(number) {
+    return String.fromCharCode(number+96);
 }
 
 async function trace_route(node_path, sTime) {
@@ -331,7 +332,7 @@ class Router {
     }
 
     update(src, updates) {
-        console.log(`updating ${this.name} from ${src}`);
+        // console.log(`updating ${this.name} from ${src}`);
         // console.log(updates)
         this._setDvForRouter(src, updates);
         var update = this._bellmanFordRouting();
@@ -343,60 +344,117 @@ class Router {
 }
 
 
-prnt = console.log
+a = new Router("a");
+b = new Router("b");
+c = new Router("c");
+d = new Router("d");
+e = new Router("e");
+f = new Router("f");
+g = new Router("g");
+h = new Router("h");
+i = new Router("i");
+j = new Router("j");
+k = new Router("k");
+l = new Router("l");
+m = new Router("m");
+n = new Router("n");
 
-a = new Router("a")
-b = new Router("b")
-c = new Router("c")
-prnt(a)
-prnt(b)
+let rtr = [
+    {id:1, router: a},
+    {id:2, router: b},
+    {id:3, router: c},
+    {id:4, router: d},
+    {id:5, router: e},
+    {id:6, router: f},
+    {id:7, router: g},
+    {id:8, router: h},
+    {id:9, router: i},
+    {id:10, router: j},
+    {id:11, router: k},
+    {id:12, router: l},
+    {id:13, router: m},
+    {id:14, router: n},
+];
 
-a.addNeighbor(b, 3)
-a.addNeighbor(c, 7)
-c.addNeighbor(b, 1)
+var rot = new vis.DataSet(rtr);
 
-prnt(a)
-prnt(b)
+fillRouter(a);
+fillRouter(b);
+fillRouter(c);
+fillRouter(d);
+fillRouter(e);
+fillRouter(f);
+fillRouter(g);
+fillRouter(h);
+fillRouter(i);
+fillRouter(j);
+fillRouter(k);
+fillRouter(l);
+fillRouter(m);
+fillRouter(n);
 
-a.broadcast()
-b.broadcast()
-c.broadcast()
-a.broadcast()
-b.broadcast()
-c.broadcast()
+a.broadcast();
+b.broadcast();
+c.broadcast();
+d.broadcast();
+e.broadcast();
+f.broadcast();
+g.broadcast();
+h.broadcast();
+i.broadcast();
+j.broadcast();
+k.broadcast();
+l.broadcast();
+m.broadcast();
+n.broadcast();
 
-prnt(a)
-prnt(b)
-prnt(c)
-
-/////////
-
-routerA = new Router("a");
-routerB = new Router("b");
-console.log(routerA);
-
-function routerLtoNum(router) {
-    return (router.name.charCodeAt(0)-96);
-}
-
-function routerNumtoL(number) {
-    return String.fromCharCode(number+96);
-}
+// To check forwarding tables
+// prnt(a);
+// prnt(b);
+// prnt(c);
+// prnt(d);
+// prnt(e);
+// prnt(f);
+// prnt(g);
+// prnt(h);
+// prnt(i);
+// prnt(j);
+// prnt(k);
+// prnt(l);
+// prnt(m);
+// prnt(n);
 
 //Adds all neighbors to router form edges(EdgeList)
 function fillRouter(router) {
     for (let i = 0; i < edges.length; i++) {
         var tempEdge = edges.get(i+1);
         if(tempEdge['to'] == routerLtoNum(router)) {
-            // router.addNeighbors(tempEdge['from'], parseInt(tempEdge['label']))
-            console.log("node id:", routerNumtoL(tempEdge['to']), "to", routerNumtoL(tempEdge['from']), "with cost=", parseInt(tempEdge['label']));
+            var tempRouter = rot.get(tempEdge['from']);
+            var tempOther = tempRouter['router'];
+            router.addNeighbor(tempOther, parseInt(tempEdge['label']))
         } else if (tempEdge['from'] == routerLtoNum(router)) {
-            // router.addNeighbors(tempEdge['to'], parseInt(tempEdge['label']))
-            console.log("node id:", routerNumtoL(tempEdge['from']), "to", routerNumtoL(tempEdge['to']), "with cost=", parseInt(tempEdge['label']));
+            var tempRouter = rot.get(tempEdge['to']);
+            var tempOther = tempRouter['router'];
+            router.addNeighbor(tempOther, parseInt(tempEdge['label']))
         }
     }
 }
 
-
-fillRouter(routerA);
-fillRouter(routerB);
+function startTransmission() {
+    var startNode = document.getElementById("start_node").value.toLowerCase();
+    // console.log(startNode);
+    var endNode = document.getElementById("stop_node").value.toLowerCase();
+    // console.log(endNode);
+    var delayTime = parseInt(document.getElementById("delay").value, 10);
+    // console.log(delayTime);
+    var tempNode = startNode;
+    var nodeRoute = [];
+    nodeRoute.push(lToNum(startNode));
+    while (tempNode != endNode) {
+        var temp = rot.get(lToNum(tempNode))['router'].forwardingTable[endNode];
+        tempNode = rot.get(lToNum(temp))['router'].name;
+        nodeRoute.push(lToNum(tempNode));
+    }
+    if(!running)
+        trace_route(nodeRoute, delayTime);
+}
