@@ -159,6 +159,36 @@ function removeAllHighlighting() {
     }
 }
 
+function updateLink() {
+    var startNode = routerLtoNum(document.getElementById("start_node_link").value);
+    var endNode = routerLtoNum(document.getElementById("end_node_link").value);
+    var linkVal = document.getElementById("new_link").value;
+    for(var i = 0; i < edgeList.length; i++) {
+        if (edgeList.get(i)["from"] == startNode && edgeList.get(i)['to'] == endNode) {
+            updateLinkCost(edgeList.get(i), linkVal);
+            break;
+        } else if (edgeList.get(i)["to"] == startNode && edgeList.get(i)['from'] == endNode) {
+            updateLinkCost(edgeList.get(i), linkVal);
+            break;
+        }
+    }
+}
+
+function updateLinkCost(edge, new_val) {
+    edge.label = new_val;
+    edges.update(edge);
+}
+
+function addNode(node, edges) {
+    nodeList.addNode(node, edges)
+    nodes.update()
+    network.redraw()
+}
+
+function removeNode(node) {
+    nodeList.removeNode(node);
+}
+
 
 function changeEdgeBackground(edge) {
     edge['font']['background'] = 'lime';
@@ -328,7 +358,13 @@ class Router {
             }
         }
         return updated;
+    }
 
+    _resetDMatrixRowToDefault() {
+        var neighborsKeys = Object.keys(this.neighbors);
+        for(var i=0; i<neighborsKeys.length; i++){
+            this._setCost(this.name, neighborsKeys[i], this.neighbors[neighborsKeys[i]])
+        }
     }
 
     update(src, updates) {
@@ -341,8 +377,54 @@ class Router {
         }
         return;
     }
+
+    changeLinkCost(neighbor, newCost) {
+        if(this.neighbors[neighbor.name] === newCost) {
+            return;
+        }
+
+        this.neighbors[neighbor.name] = newCost;
+        neighbor.changeLinkCost(this, newCost);
+        this._resetDMatrixRowToDefault();
+        this.update(this.name, {})
+    }
+
+    removeRouter(router) {
+        return;
+    }
 }
 
+prnt = console.log
+
+a = new Router("a")
+b = new Router("b")
+c = new Router("c")
+
+a.broadcast()
+b.broadcast()
+c.broadcast()
+a.broadcast()
+b.broadcast()
+c.broadcast()
+
+prnt(a)
+prnt(b)
+prnt(c)
+
+c.changeLinkCost(a, 2)
+
+prnt(a)
+prnt(b)
+prnt(c)
+
+c.changeLinkCost(a, 7)
+
+
+prnt(a)
+prnt(b)
+prnt(c)
+
+/////////
 
 a = new Router("a");
 b = new Router("b");
