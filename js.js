@@ -358,7 +358,13 @@ class Router {
             }
         }
         return updated;
+    }
 
+    _resetDMatrixRowToDefault() {
+        var neighborsKeys = Object.keys(this.neighbors);
+        for(var i=0; i<neighborsKeys.length; i++){
+            this._setCost(this.name, neighborsKeys[i], this.neighbors[neighborsKeys[i]])
+        }
     }
 
     update(src, updates) {
@@ -371,8 +377,54 @@ class Router {
         }
         return;
     }
+
+    changeLinkCost(neighbor, newCost) {
+        if(this.neighbors[neighbor.name] === newCost) {
+            return;
+        }
+
+        this.neighbors[neighbor.name] = newCost;
+        neighbor.changeLinkCost(this, newCost);
+        this._resetDMatrixRowToDefault();
+        this.update(this.name, {})
+    }
+
+    removeRouter(router) {
+        return;
+    }
 }
 
+prnt = console.log
+
+a = new Router("a")
+b = new Router("b")
+c = new Router("c")
+
+a.broadcast()
+b.broadcast()
+c.broadcast()
+a.broadcast()
+b.broadcast()
+c.broadcast()
+
+prnt(a)
+prnt(b)
+prnt(c)
+
+c.changeLinkCost(a, 2)
+
+prnt(a)
+prnt(b)
+prnt(c)
+
+c.changeLinkCost(a, 7)
+
+
+prnt(a)
+prnt(b)
+prnt(c)
+
+/////////
 
 a = new Router("a");
 b = new Router("b");
