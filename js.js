@@ -204,8 +204,8 @@ class Router {
 
         this.numNodes += 1;
         this.neighbors[neighbor.name] = cost
-        this.nodes[neighbor.name] = self.numNodes
-        // this._addNeighborToMatrix(cost)
+        this.nodes[neighbor.name] = this.numNodes
+        this._addNeighborToMatrix(cost)
         this._subscribeEvent(neighbor.update)
         this.forwardingTable[neighbor.name] = neighbor.name
         neighbor.addNeighbor(this, cost)
@@ -219,10 +219,10 @@ class Router {
         }
 
         for(var row=1; row<this.dMatrix.length; row++) {
-            this.dMatrix[row] = jQuery.extend(true, {}, emptyColumnRow)
+            this.dMatrix[row] = jQuery.extend(true, [], emptyColumnRow)
         }
 
-        this.dMatrix.push(jQuery.extend(true, {}, emptyColumnRow))
+        this.dMatrix.push(jQuery.extend(true, [], emptyColumnRow))
     }
 
     _subscribeEvent(event) {
@@ -230,6 +230,13 @@ class Router {
     }
 
     _getCost(src, dest) {
+        // console.log("getcost")
+        // console.log(src)
+        // console.log(dest)
+        // console.log(this.nodes[src])
+        // console.log(this.nodes[dest])
+        // console.log(this.dMatrix[this.nodes[src]])
+        // console.log(this.dMatrix[this.nodes[src]][this.nodes[dest]])
         return this.dMatrix[this.nodes[src]][this.nodes[dest]];
     }
 
@@ -246,21 +253,24 @@ class Router {
     _generateRowCostMapping(src) {
         var rowCostMapping = {};
         var nodesKeys = Object.keys(this.nodes);
+        // console.log(nodesKeys)
         var dest = null;
-        for(var i=0; i<nodesKeys; i++) {
-            dest = this.nodes[nodeskeys[i]]
+        for(var i=0; i<nodesKeys.length; i++) {
+            dest = nodesKeys[i]
+            // console.log(`dest ${dest}`)
             rowCostMapping[dest] = this._getCost(src, dest);
         }
+        // console.log(rowCostMapping)
         return rowCostMapping;
     }
 
     _setDvForRouter(routerName, dvValues) {
-        dvValuesKeys = Object.keys(dvValues);
+        var dvValuesKeys = Object.keys(dvValues);
         var dv = null;
         for(var i=0; i<dvValuesKeys.length; i++) {
             dv = dvValuesKeys[i];
-            if(!this.nodes.includes(dv)) {
-                this.allocate_new_blank_column(dv);
+            if(!this.nodes.hasOwnProperty(dv)) {
+                this._allocateNewBlankColumn(dv);
             }
             this._setCost(routerName, dv, dvValues[dv])
         }
@@ -282,6 +292,7 @@ class Router {
         var optionsKeys = null;
         var src = null;
         var newMin = null;
+        var dest = null;
         for(var i=0; i<nodesKeys.length; i++) {
             dest = nodesKeys[i];
             if(dest === this.name) {
@@ -289,9 +300,9 @@ class Router {
             }
 
             bellmanFordOptions = {}
-            for(var i=0; i<neighborsKeys.length; i++) {
-                src = neighborsKeys[i]
-                if(src === self.name || this._getCost(src, dest) === null) {
+            for(var j=0; j<neighborsKeys.length; j++) {
+                src = neighborsKeys[j]
+                if(src === this.name || this._getCost(src, dest) === null) {
                     continue;
                 }
                 bellmanFordOptions[src] = this.neighbors[src] + this._getCost(src, dest);
@@ -303,9 +314,9 @@ class Router {
 
             optionsKeys = Object.keys(bellmanFordOptions);
             newMin = null;
-            for(var i=0; i<optionsKeys.length; i++) {
-                if(!newMin || bellmanFordOptions[optionsKeys[i]] < bellmanFordOptions[newMin]){
-                    newMin = optionsKeys[i];
+            for(var j=0; j<optionsKeys.length; j++) {
+                if(newMin === null || bellmanFordOptions[optionsKeys[j]] < bellmanFordOptions[newMin]){
+                    newMin = optionsKeys[j];
                 }
             }
 
@@ -320,8 +331,13 @@ class Router {
     }
 
     update(src, updates) {
-        console.log(`updating ${this.name} from ${src}`)
-        
+        console.log(`updating ${this.name} from ${src}`);
+        // console.log(updates)
+        this._setDvForRouter(src, updates);
+        var update = this._bellmanFordRouting();
+        if(update === true) {
+            this.broadcast();
+        }
         return;
     }
 }
@@ -331,16 +347,27 @@ prnt = console.log
 
 a = new Router("a")
 b = new Router("b")
+c = new Router("c")
 prnt(a)
 prnt(b)
 
 a.addNeighbor(b, 3)
+a.addNeighbor(c, 7)
+c.addNeighbor(b, 1)
 
 prnt(a)
 prnt(b)
 
 a.broadcast()
 b.broadcast()
+c.broadcast()
+a.broadcast()
+b.broadcast()
+c.broadcast()
+
+prnt(a)
+prnt(b)
+prnt(c)
 
 /////////
 
