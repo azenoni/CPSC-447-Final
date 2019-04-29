@@ -196,6 +196,9 @@ class Router {
         this._setDvForRouter = this._setDvForRouter.bind(this)
         this._allocateNewBlankColumn = this._allocateNewBlankColumn.bind(this)
         this._bellmanFordRouting = this._bellmanFordRouting.bind(this)
+        this._resetDMatrixRowToDefault = this._resetDMatrixRowToDefault.bind(this)
+        this.changeLinkCost = this.changeLinkCost.bind(this)
+        this.removeRouter = this.removeRouter.bind(this)
     }
 
     addNeighbor(neighbor, cost) {
@@ -231,13 +234,6 @@ class Router {
     }
 
     _getCost(src, dest) {
-        // console.log("getcost")
-        // console.log(src)
-        // console.log(dest)
-        // console.log(this.nodes[src])
-        // console.log(this.nodes[dest])
-        // console.log(this.dMatrix[this.nodes[src]])
-        // console.log(this.dMatrix[this.nodes[src]][this.nodes[dest]])
         return this.dMatrix[this.nodes[src]][this.nodes[dest]];
     }
 
@@ -353,9 +349,12 @@ class Router {
             return;
         }
 
+        // console.log(this.neighbors)
         this.neighbors[neighbor.name] = newCost;
+        // console.log(this.neighbors)
         neighbor.changeLinkCost(this, newCost);
         this._resetDMatrixRowToDefault();
+        // console.log(this.neighbors)
         this.update(this.name, {})
     }
 
@@ -370,6 +369,10 @@ a = new Router("a")
 b = new Router("b")
 c = new Router("c")
 
+a.addNeighbor(b, 1)
+a.addNeighbor(c, 7)
+b.addNeighbor(c, 3)
+
 a.broadcast()
 b.broadcast()
 c.broadcast()
@@ -377,22 +380,40 @@ a.broadcast()
 b.broadcast()
 c.broadcast()
 
+prnt(a.neighbors)
 prnt(a)
-prnt(b)
-prnt(c)
+prnt(a.dMatrix)
+prnt(b.dMatrix)
+prnt(c.dMatrix)
 
-c.changeLinkCost(a, 2)
+c.changeLinkCost(a, 1)
+a.broadcast()
+b.broadcast()
+c.broadcast()
+a.broadcast()
+b.broadcast()
+c.broadcast()
 
+prnt(a.neighbors)
 prnt(a)
-prnt(b)
-prnt(c)
+prnt(a.dMatrix)
+prnt(b.dMatrix)
+prnt(c.dMatrix)
+
 
 c.changeLinkCost(a, 7)
+a.broadcast()
+b.broadcast()
+c.broadcast()
+a.broadcast()
+b.broadcast()
+c.broadcast()
 
-
+prnt(a.neighbors)
 prnt(a)
-prnt(b)
-prnt(c)
+prnt(a.dMatrix)
+prnt(b.dMatrix)
+prnt(c.dMatrix)
 
 /////////
 
