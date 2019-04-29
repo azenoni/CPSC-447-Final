@@ -192,7 +192,10 @@ function addLink() {
     edges.add(edge);
 
     let neighborRouter = rot.get(fromNode)['router'];
+    fillRouter(neighborRouter);
     neighborRouter.broadcast();
+    
+    rot.get(toNode)['router'].broadcast();
 }
 
 function addNode() {
@@ -220,28 +223,6 @@ function addNode() {
     neighborRouter.broadcast();
     tmp.broadcast();
 
-    // a.broadcast();
-    // b.broadcast();
-    // c.broadcast();
-    // d.broadcast();
-    // e.broadcast();
-    // f.broadcast();
-    // g.broadcast();
-    // h.broadcast();
-    // i.broadcast();
-    // j.broadcast();
-    // k.broadcast();
-    // l.broadcast();
-    // m.broadcast();
-    // n.broadcast();
-    // tmp.broadcast();
-
-}
-
-
-
-function removeNode(node) {
-    nodeList.removeNode(node);
 }
 
 
