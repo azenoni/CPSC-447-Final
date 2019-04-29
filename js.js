@@ -87,6 +87,7 @@ function routerLtoNum(router) {
 }
 
 function lToNum(letter) {
+    prnt(letter);
     return letter.charCodeAt(0)-96;
 }
 
@@ -184,16 +185,45 @@ function updateLinkCost(edge, new_val) {
 }
 
 function addNode() {
-    var nodeLabel = document.getElementById("start_node_link").value;
+    var nodeLabel = document.getElementById("add_node_label").value;
+    prnt(nodeLabel);
     var nodeId = lToNum(nodeLabel.toLowerCase());
-    var neighbor = lToNum(document.getElementById("start_node_link").value.toLowerCase());
+    prnt(nodeId);
+    var neighbor = lToNum(document.getElementById("neighbor_label").value.toLowerCase());
     var linkVal = document.getElementById("link_value_add").value;
     var node = {id: nodeId, label: nodeLabel}
     nodeList.push(node)
-    nodes.update();
-    network.redraw();
+    nodes.add(node);
 
-    var edge = {id: edgeList.length + 1, from: nodeId, to: neighbor, label: link_val, font: edgeFont, color: edgeColor};
+    tmp = new Router(nodeLabel.toLowerCase());
+    fillRouter(tmp);
+    tmp.broadcast();
+    prnt(tmp);
+    rot.get(neighbor)['router'].addNeighbor(tmp, parseInt(linkVal));
+    var edge = {id: edgeList.length + 1, from: nodeId, to: neighbor, label: linkVal, font: edgeFont, color: edgeColor};
+    edgeList.push(edge);
+    edges.add(edge);
+    network.redraw();
+    var rtr_tmp = {id: nodeId, router: tmp}; 
+    rtr.push(rtr_tmp);
+    rot.update(rtr_tmp);
+    fillRouter(rot.get(neighbor)['router']);
+    prnt(rot.get(neighbor)['router']);
+    rot.get(neighbor)['router'].broadcast();
+    // a.broadcast();
+    // b.broadcast();
+    // c.broadcast();
+    // d.broadcast();
+    // e.broadcast();
+    // f.broadcast();
+    // g.broadcast();
+    // h.broadcast();
+    // i.broadcast();
+    // j.broadcast();
+    // k.broadcast();
+    // l.broadcast();
+    // m.broadcast();
+    // n.broadcast();
 
 }
 
@@ -545,9 +575,12 @@ function startTransmission() {
     // console.log(delayTime);
     var tempNode = startNode;
     var nodeRoute = [];
+    prnt("Starint transmission");
     nodeRoute.push(lToNum(startNode));
+    prnt(rot.get(lToNum(startNode))['router']);
     while (tempNode != endNode) {
         var temp = rot.get(lToNum(tempNode))['router'].forwardingTable[endNode];
+        // prnt(rot.get(lToNum(temp)));
         tempNode = rot.get(lToNum(temp))['router'].name;
         nodeRoute.push(lToNum(tempNode));
     }
