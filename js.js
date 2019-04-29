@@ -164,7 +164,20 @@ function forceRefreshAll() {
     for(var i=0; i<edgeList.length; i++){
         var router = rot.get(edgeList[i]['from'])['router'];
         router.forceRefresh()
+    }
+}
+
+function broadcastAll() {
+    for(var i=0; i<edgeList.length; i++){
+        var router = rot.get(edgeList[i]['from'])['router'];
         router.broadcast()
+    }
+}
+
+function prntAll() {
+    for(var i=0; i<edgeList.length; i++){
+        var router = rot.get(edgeList[i]['from'])['router'];
+        prnt(router)
     }
 }
 
@@ -179,6 +192,7 @@ function updateLink() {
             updateLinkCost(edgeList[i_t], linkVal);
             startRouter.changeLinkCost(endRouter, parseInt(linkVal));
             forceRefreshAll();
+            broadcastAll();
 
             // rot.get(startRouter.broadcast());
             // prnt(JSON.stringify(startRouter));
@@ -193,13 +207,14 @@ function updateLink() {
             //     rot.get(i+1)['router'].forceRefresh();
             // }
             forceRefreshAll()
+            broadcastAll();
             // rot.get(startRouter.broadcast());
             // prnt(JSON.stringify(startRouter));
             // prnt(JSON.stringify(endRouter));
             break;
         }
     }
-    prnt(d);
+    prntAll()
 }
 
 function updateLinkCost(edge, new_val) {
