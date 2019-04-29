@@ -182,6 +182,22 @@ function updateLinkCost(edge, new_val) {
     edges.update(edge);
 }
 
+function addLink() {
+    var fromNode = lToNum(document.getElementById("add_link_from").value.toLowerCase());
+    var toNode = lToNum(document.getElementById("add_link_to").value.toLowerCase());
+    var val = document.getElementById("link_value_update").value;
+    
+    var edge = {id: edgeList.length + 1, from: fromNode, to: toNode, label: val, font: edgeFont, color: edgeColor};
+    edgeList.push(edge);
+    edges.add(edge);
+
+    let neighborRouter = rot.get(fromNode)['router'];
+    fillRouter(neighborRouter);
+    neighborRouter.broadcast();
+    
+    rot.get(toNode)['router'].broadcast();
+}
+
 function addNode() {
     var nodeLabel = document.getElementById("add_node_label").value;
     var nodeId = lToNum(nodeLabel.toLowerCase());
@@ -207,28 +223,6 @@ function addNode() {
     neighborRouter.broadcast();
     tmp.broadcast();
 
-    // a.broadcast();
-    // b.broadcast();
-    // c.broadcast();
-    // d.broadcast();
-    // e.broadcast();
-    // f.broadcast();
-    // g.broadcast();
-    // h.broadcast();
-    // i.broadcast();
-    // j.broadcast();
-    // k.broadcast();
-    // l.broadcast();
-    // m.broadcast();
-    // n.broadcast();
-    // tmp.broadcast();
-
-}
-
-
-
-function removeNode(node) {
-    nodeList.removeNode(node);
 }
 
 

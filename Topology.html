@@ -17,7 +17,7 @@
             <td>Stop Node:</td><td><input type="text" value="E" id="stop_node" style="width:170px;"></td>
         </tr>
         <tr>
-            <td>Delay Between Nodes (ms):</td><td><input type="text" value="1.0" id="delay" style="width:170px;"></td>
+            <td>Delay Between Nodes (ms):</td><td><input type="text" value="1000" id="delay" style="width:170px;"></td>
         </tr>
     </table>
     <input type="button" onclick="startTransmission();" value="Start Packet Tranmission" style="width:50%;" id="btnDo">
@@ -31,18 +31,10 @@
             <td>Update To Node:</td><td><input type="text" value="E" id="stop_node_link" style="width:170px;"></td>
         </tr>
         <tr>
-            <td>Value:</td><td><input type="text" value="1.0" id="new_link" style="width:170px;"></td>
+            <td>Value:</td><td><input type="text" value="1" id="new_link" style="width:170px;"></td>
         </tr>
     </table>
     <input type="button" onclick="updateLink();" value="Update Link" style="width:50%;" id="btnDo">
-    <br>
-    <br>
-    <table>
-        <tr>
-            <td>Delete Node:</td><td><input type="text" value="A" id="delete_node" style="width:170px;"></td>
-        </tr>
-    </table>
-    <input type="button" onclick="deleteNode();" value="Delete Node" style="width:50%;" id="btnDo">
     <br>
     <br>
     <table>
@@ -53,7 +45,7 @@
             <td>Add Neighboor:</td><td><input type="text" value="E" id="neighbor_label" style="width:170px;"></td>
         </tr>
         <tr>
-            <td>Link Value:</td><td><input type="text" value="1.0" id="link_value_add" style="width:170px;"></td>
+            <td>Link Value:</td><td><input type="text" value="1" id="link_value_add" style="width:170px;"></td>
         </tr>
     </table>
     <input type="button" onclick="addNode();" value="Add Node" style="width:50%;" id="btnDo">
@@ -67,7 +59,7 @@
             <td>Add Link To:</td><td><input type="text" value="E" id="add_link_to" style="width:170px;"></td>
         </tr>
         <tr>
-            <td>Link Value:</td><td><input type="text" value="1.0" id="link_value_update" style="width:170px;"></td>
+            <td>Link Value:</td><td><input type="text" value="1" id="link_value_update" style="width:170px;"></td>
         </tr>
     </table>
     <input type="button" onclick="addLink();" value="Add Link" style="width:50%;" id="btnDo">
