@@ -87,7 +87,7 @@ function routerLtoNum(router) {
 }
 
 function lToNum(letter) {
-    prnt(letter);
+    // prnt(letter);
     return letter.charCodeAt(0)-96;
 }
 
@@ -161,32 +161,92 @@ function removeAllHighlighting() {
 }
 
 function updateLink() {
-    prnt(JSON.stringify(g));
-    prnt(JSON.stringify(e));
     var startNode = lToNum(document.getElementById("start_node_link").value.toLowerCase());
     var endNode = lToNum(document.getElementById("stop_node_link").value.toLowerCase());
     var linkVal = document.getElementById("new_link").value;
-    for(var i = 0; i < edgeList.length; i++) {
-        if (edgeList[i]["from"] == startNode && edgeList[i]['to'] == endNode) {
-            var startRouter = rot.get(edgeList[i]['from'])['router'];
-            var endRouter = rot.get(edgeList[i]['to'])['router'];
-            updateLinkCost(edgeList[i], linkVal);
+    for(var i_t = 0; i_t < edgeList.length; i_t++) {
+        if (edgeList[i_t]["from"] == startNode && edgeList[i_t]['to'] == endNode) {
+            var startRouter = rot.get(edgeList[i_t]['from'])['router'];
+            var endRouter = rot.get(edgeList[i_t]['to'])['router'];
+            updateLinkCost(edgeList[i_t], linkVal);
             startRouter.changeLinkCost(endRouter, parseInt(linkVal));
+            a.forceRefresh();
+            b.forceRefresh();
+            c.forceRefresh();
+            d.forceRefresh();
+            e.forceRefresh();
+            f.forceRefresh();
+            g.forceRefresh();
+            h.forceRefresh();
+            i.forceRefresh();
+            j.forceRefresh();
+            k.forceRefresh();
+            l.forceRefresh();
+            m.forceRefresh();
+            n.forceRefresh();
+
+            a.broadcast();
+            b.broadcast();
+            c.broadcast();
+            d.broadcast();
+            e.broadcast();
+            f.broadcast();
+            g.broadcast();
+            h.broadcast();
+            i.broadcast();
+            j.broadcast();
+            k.broadcast();
+            l.broadcast();
+            m.broadcast();
+            n.broadcast();
             // rot.get(startRouter.broadcast());
-            prnt(JSON.stringify(startRouter));
-            prnt(JSON.stringify(endRouter));
+            // prnt(JSON.stringify(startRouter));
+            // prnt(JSON.stringify(endRouter));
             break;
-        } else if (edgeList[i]["to"] == startNode && edgeList[i]['from'] == endNode) {
-            var startRouter = rot.get(edgeList[i]['to'])['router'];
-            var endRouter = rot.get(edgeList[i]['from'])['router'];
-            updateLinkCost(edgeList[i], linkVal);
-            startRouter.changeLinkCost(startRouter, parseInt(linkVal));
+        } else if (edgeList[i_t]["to"] == startNode && edgeList[i_t]['from'] == endNode) {
+            var startRouter = rot.get(edgeList[i_t]['to'])['router'];
+            var endRouter = rot.get(edgeList[i_t]['from'])['router'];
+            updateLinkCost(edgeList[i_t], linkVal);
+            startRouter.changeLinkCost(endRouter, parseInt(linkVal));
+            // for (let i = 0; i < rtr.length; i++) {
+            //     rot.get(i+1)['router'].forceRefresh();
+            // }
+            a.forceRefresh();
+            b.forceRefresh();
+            c.forceRefresh();
+            d.forceRefresh();
+            e.forceRefresh();
+            f.forceRefresh();
+            g.forceRefresh();
+            h.forceRefresh();
+            i.forceRefresh();
+            j.forceRefresh();
+            k.forceRefresh();
+            l.forceRefresh();
+            m.forceRefresh();
+            n.forceRefresh();
+
+            a.broadcast();
+            b.broadcast();
+            c.broadcast();
+            d.broadcast();
+            e.broadcast();
+            f.broadcast();
+            g.broadcast();
+            h.broadcast();
+            i.broadcast();
+            j.broadcast();
+            k.broadcast();
+            l.broadcast();
+            m.broadcast();
+            n.broadcast();
             // rot.get(startRouter.broadcast());
-            prnt(JSON.stringify(startRouter));
-            prnt(JSON.stringify(endRouter));
+            // prnt(JSON.stringify(startRouter));
+            // prnt(JSON.stringify(endRouter));
             break;
         }
     }
+    prnt(JSON.stringify(d));
 }
 
 function updateLinkCost(edge, new_val) {
@@ -409,7 +469,7 @@ class Router {
             }
 
             if(this._getCost(this.name, dest) === null || bellmanFordOptions[newMin] < this._getCost(this.name, dest)) {
-                prnt(this.name, "IN BELLMANFORD", bellmanFordOptions[newMin]);
+                // prnt(this.name, "IN BELLMANFORD", bellmanFordOptions[newMin]);
                 this._setCost(this.name, dest, bellmanFordOptions[newMin]);
                 this.forwardingTable[dest] = newMin;
                 updated = true;
@@ -440,7 +500,7 @@ class Router {
         // console.log(`updating ${this.name} from ${src}`);
         // console.log(updates)
         this._setDvForRouter(src, updates);
-        prnt("calling bellmanFord", src);
+        // prnt("calling bellmanFord", src);
         var update = this._bellmanFordRouting();
         if(update === true) {
             this.broadcast();
@@ -483,11 +543,11 @@ a.broadcast()
 b.broadcast()
 c.broadcast()
 
-prnt(a.neighbors)
-prnt(a)
-prnt(a.dMatrix)
-prnt(b.dMatrix)
-prnt(c.dMatrix)
+prnt(JSON.stringify(a.neighbors))
+prnt(JSON.stringify(a))
+prnt(JSON.stringify(a.dMatrix))
+prnt(JSON.stringify(b.dMatrix))
+prnt(JSON.stringify(c.dMatrix))
 
 c.changeLinkCost(a, 1)
 b.forceRefresh()
@@ -498,11 +558,11 @@ a.broadcast()
 b.broadcast()
 c.broadcast()
 
-prnt(a.neighbors)
-prnt(a)
-prnt(a.dMatrix)
-prnt(b.dMatrix)
-prnt(c.dMatrix)
+prnt(JSON.stringify(a.neighbors))
+prnt(JSON.stringify(a))
+prnt(JSON.stringify(a.dMatrix))
+prnt(JSON.stringify(b.dMatrix))
+prnt(JSON.stringify(c.dMatrix))
 
 
 c.changeLinkCost(a, 7)
@@ -514,11 +574,11 @@ a.broadcast()
 b.broadcast()
 c.broadcast()
 
-prnt(a.neighbors)
-prnt(a)
-prnt(a.dMatrix)
-prnt(b.dMatrix)
-prnt(c.dMatrix)
+prnt(JSON.stringify(a.neighbors))
+prnt(JSON.stringify(a))
+prnt(JSON.stringify(a.dMatrix))
+prnt(JSON.stringify(b.dMatrix))
+prnt(JSON.stringify(c.dMatrix))
 
 /////////
 
