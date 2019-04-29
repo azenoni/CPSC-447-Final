@@ -182,6 +182,13 @@ function updateLinkCost(edge, new_val) {
     edges.update(edge);
 }
 
+function addLink() {
+    var fromNode = document.getElementById("add_link_from").value;
+    var toNode = document.getElementById("add_link_to").value;
+    var val = document.getElementById("link_value_update").value;
+    
+}
+
 function addNode() {
     var nodeLabel = document.getElementById("add_node_label").value;
     var nodeId = lToNum(nodeLabel.toLowerCase());
