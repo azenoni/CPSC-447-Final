@@ -161,17 +161,29 @@ function removeAllHighlighting() {
 }
 
 function updateLink() {
+    prnt(JSON.stringify(g));
+    prnt(JSON.stringify(e));
     var startNode = lToNum(document.getElementById("start_node_link").value.toLowerCase());
     var endNode = lToNum(document.getElementById("stop_node_link").value.toLowerCase());
     var linkVal = document.getElementById("new_link").value;
     for(var i = 0; i < edgeList.length; i++) {
         if (edgeList[i]["from"] == startNode && edgeList[i]['to'] == endNode) {
+            var startRouter = rot.get(edgeList[i]['from'])['router'];
+            var endRouter = rot.get(edgeList[i]['to'])['router'];
             updateLinkCost(edgeList[i], linkVal);
-            rot.get(edgeList[i]['from'])['router'].broadcast();
+            startRouter.changeLinkCost(endRouter, parseInt(linkVal));
+            // rot.get(startRouter.broadcast());
+            prnt(JSON.stringify(startRouter));
+            prnt(JSON.stringify(endRouter));
             break;
         } else if (edgeList[i]["to"] == startNode && edgeList[i]['from'] == endNode) {
+            var startRouter = rot.get(edgeList[i]['to'])['router'];
+            var endRouter = rot.get(edgeList[i]['from'])['router'];
             updateLinkCost(edgeList[i], linkVal);
-            rot.get(edgeList[i]['from'])['router'].broadcast();
+            startRouter.changeLinkCost(startRouter, parseInt(linkVal));
+            // rot.get(startRouter.broadcast());
+            prnt(JSON.stringify(startRouter));
+            prnt(JSON.stringify(endRouter));
             break;
         }
     }
@@ -356,6 +368,7 @@ class Router {
             if(!this.nodes.hasOwnProperty(dv)) {
                 this._allocateNewBlankColumn(dv);
             }
+            // prnt(routerName, "IN SETDVROUTER", dvValues[dv]);
             this._setCost(routerName, dv, dvValues[dv])
         }
     }
@@ -405,6 +418,7 @@ class Router {
             }
 
             if(this._getCost(this.name, dest) === null || bellmanFordOptions[newMin] < this._getCost(this.name, dest)) {
+                prnt(this.name, "IN BELLMANFORD", bellmanFordOptions[newMin]);
                 this._setCost(this.name, dest, bellmanFordOptions[newMin]);
                 this.forwardingTable[dest] = newMin;
                 updated = true;
@@ -416,6 +430,8 @@ class Router {
     _resetDMatrixRowToDefault() {
         var neighborsKeys = Object.keys(this.neighbors);
         for(var i=0; i<neighborsKeys.length; i++){
+            prnt(JSON.stringify(neighborsKeys[i]), "THIS ONE**");
+            prnt(JSON.stringify(this.neighbors[neighborsKeys[i]]), this.name);
             this._setCost(this.name, neighborsKeys[i], this.neighbors[neighborsKeys[i]])
         }
     }
@@ -424,6 +440,7 @@ class Router {
         // console.log(`updating ${this.name} from ${src}`);
         // console.log(updates)
         this._setDvForRouter(src, updates);
+        prnt("calling bellmanFord", src);
         var update = this._bellmanFordRouting();
         if(update === true) {
             this.broadcast();
@@ -437,9 +454,11 @@ class Router {
         }
 
         this.neighbors[neighbor.name] = newCost;
-        neighbor.changeLinkCost(this, newCost);
         this._resetDMatrixRowToDefault();
+        neighbor.changeLinkCost(this, newCost);
+        // this.broadcast();
         this.update(this.name, {})
+        // prnt(JSON.stringify(this));
     }
 
     removeRouter(router) {
