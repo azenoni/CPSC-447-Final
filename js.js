@@ -160,6 +160,14 @@ function removeAllHighlighting() {
     }
 }
 
+function forceRefreshAll() {
+    for(var i=0; i<edgeList.length; i++){
+        var router = rot.get(edgeList[i]['from'])['router'];
+        router.forceRefresh()
+        router.broadcast()
+    }
+}
+
 function updateLink() {
     var startNode = lToNum(document.getElementById("start_node_link").value.toLowerCase());
     var endNode = lToNum(document.getElementById("stop_node_link").value.toLowerCase());
@@ -170,35 +178,8 @@ function updateLink() {
             var endRouter = rot.get(edgeList[i_t]['to'])['router'];
             updateLinkCost(edgeList[i_t], linkVal);
             startRouter.changeLinkCost(endRouter, parseInt(linkVal));
-            a.forceRefresh();
-            b.forceRefresh();
-            c.forceRefresh();
-            d.forceRefresh();
-            e.forceRefresh();
-            f.forceRefresh();
-            g.forceRefresh();
-            h.forceRefresh();
-            i.forceRefresh();
-            j.forceRefresh();
-            k.forceRefresh();
-            l.forceRefresh();
-            m.forceRefresh();
-            n.forceRefresh();
+            forceRefreshAll();
 
-            a.broadcast();
-            b.broadcast();
-            c.broadcast();
-            d.broadcast();
-            e.broadcast();
-            f.broadcast();
-            g.broadcast();
-            h.broadcast();
-            i.broadcast();
-            j.broadcast();
-            k.broadcast();
-            l.broadcast();
-            m.broadcast();
-            n.broadcast();
             // rot.get(startRouter.broadcast());
             // prnt(JSON.stringify(startRouter));
             // prnt(JSON.stringify(endRouter));
@@ -211,42 +192,14 @@ function updateLink() {
             // for (let i = 0; i < rtr.length; i++) {
             //     rot.get(i+1)['router'].forceRefresh();
             // }
-            a.forceRefresh();
-            b.forceRefresh();
-            c.forceRefresh();
-            d.forceRefresh();
-            e.forceRefresh();
-            f.forceRefresh();
-            g.forceRefresh();
-            h.forceRefresh();
-            i.forceRefresh();
-            j.forceRefresh();
-            k.forceRefresh();
-            l.forceRefresh();
-            m.forceRefresh();
-            n.forceRefresh();
-
-            a.broadcast();
-            b.broadcast();
-            c.broadcast();
-            d.broadcast();
-            e.broadcast();
-            f.broadcast();
-            g.broadcast();
-            h.broadcast();
-            i.broadcast();
-            j.broadcast();
-            k.broadcast();
-            l.broadcast();
-            m.broadcast();
-            n.broadcast();
+            forceRefreshAll()
             // rot.get(startRouter.broadcast());
             // prnt(JSON.stringify(startRouter));
             // prnt(JSON.stringify(endRouter));
             break;
         }
     }
-    prnt(JSON.stringify(d));
+    prnt(d);
 }
 
 function updateLinkCost(edge, new_val) {
@@ -485,7 +438,7 @@ class Router {
         for(var j=0; j<neighborsKeys.length; j++) {
  
            for(var i=0; i<nodesKeys.length; i++){
-                if(j === 0 && this.nodes.hasOwnProperty(nodesKeys[i])) {
+                if(j === 0 && this.nodes.hasOwnProperty(neighborsKeys[i])) {
                     newVal = this.neighbors[neighborsKeys[i]]
                 }
                 else {
@@ -527,6 +480,7 @@ class Router {
 }
 
 prnt = console.log
+strprnt = (obj) => prnt(JSON.stringify(obj))
 
 a = new Router("a")
 b = new Router("b")
