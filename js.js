@@ -183,10 +183,16 @@ function updateLinkCost(edge, new_val) {
 }
 
 function addLink() {
-    var fromNode = document.getElementById("add_link_from").value;
-    var toNode = document.getElementById("add_link_to").value;
+    var fromNode = lToNum(document.getElementById("add_link_from").value.toLowerCase());
+    var toNode = lToNum(document.getElementById("add_link_to").value.toLowerCase());
     var val = document.getElementById("link_value_update").value;
     
+    var edge = {id: edgeList.length + 1, from: fromNode, to: toNode, label: val, font: edgeFont, color: edgeColor};
+    edgeList.push(edge);
+    edges.add(edge);
+
+    let neighborRouter = rot.get(fromNode)['router'];
+    neighborRouter.broadcast();
 }
 
 function addNode() {
