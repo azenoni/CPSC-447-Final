@@ -264,7 +264,7 @@ class Router {
         this._setDvForRouter = this._setDvForRouter.bind(this)
         this._allocateNewBlankColumn = this._allocateNewBlankColumn.bind(this)
         this._bellmanFordRouting = this._bellmanFordRouting.bind(this)
-        this._resetDMatrixRowToDefault = this._resetDMatrixRowToDefault.bind(this)
+        this.forceRefresh = this.forceRefresh.bind(this)
         this.changeLinkCost = this.changeLinkCost.bind(this)
         this.removeRouter = this.removeRouter.bind(this)
     }
@@ -404,10 +404,21 @@ class Router {
         return updated;
     }
 
-    _resetDMatrixRowToDefault() {
-        var neighborsKeys = Object.keys(this.neighbors);
-        for(var i=0; i<neighborsKeys.length; i++){
-            this._setCost(this.name, neighborsKeys[i], this.neighbors[neighborsKeys[i]])
+    forceRefresh() {
+        var nodesKeys = Object.keys(this.nodes);
+        var neighborsKeys = Object.keys(this.neighbors)
+        var newVal = null;
+        for(var j=0; j<neighborsKeys.length; j++) {
+ 
+           for(var i=0; i<nodesKeys.length; i++){
+                if(j === 0 && this.nodes.hasOwnProperty(nodesKeys[i])) {
+                    newVal = this.neighbors[neighborsKeys[i]]
+                }
+                else {
+                    newVal = null
+                }
+                this._setCost(neighborsKeys[j], nodesKeys[i], newVal)
+            }
         }
     }
 
@@ -430,10 +441,9 @@ class Router {
         // console.log(this.neighbors)
         this.neighbors[neighbor.name] = newCost;
         // console.log(this.neighbors)
-        neighbor.changeLinkCost(this, newCost);
-        this._resetDMatrixRowToDefault();
+        this.forceRefresh();
         // console.log(this.neighbors)
-        this.update(this.name, {})
+        neighbor.changeLinkCost(this, newCost);
     }
 
     removeRouter(router) {
@@ -443,9 +453,9 @@ class Router {
 
 prnt = console.log
 
-// a = new Router("a")
-// b = new Router("b")
-// c = new Router("c")
+a = new Router("a")
+b = new Router("b")
+c = new Router("c")
 
 a.addNeighbor(b, 1)
 a.addNeighbor(c, 7)
@@ -465,6 +475,7 @@ prnt(b.dMatrix)
 prnt(c.dMatrix)
 
 c.changeLinkCost(a, 1)
+b.forceRefresh()
 a.broadcast()
 b.broadcast()
 c.broadcast()
@@ -480,6 +491,7 @@ prnt(c.dMatrix)
 
 
 c.changeLinkCost(a, 7)
+b.forceRefresh()
 a.broadcast()
 b.broadcast()
 c.broadcast()
