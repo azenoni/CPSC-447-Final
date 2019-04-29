@@ -160,15 +160,19 @@ function removeAllHighlighting() {
 }
 
 function updateLink() {
-    var startNode = lToNum(document.getElementById("start_node_link").value);
-    var endNode = lToNum(document.getElementById("stop_node_link").value);
+    var startNode = lToNum(document.getElementById("start_node_link").value.toLowerCase());
+    var endNode = lToNum(document.getElementById("stop_node_link").value.toLowerCase());
     var linkVal = document.getElementById("new_link").value;
     for(var i = 0; i < edgeList.length; i++) {
-        if (edgeList.get(i)["from"] == startNode && edgeList.get(i)['to'] == endNode) {
-            updateLinkCost(edgeList.get(i), linkVal);
+        if (edgeList[i]["from"] == startNode && edgeList[i]['to'] == endNode) {
+            updateLinkCost(edgeList[i], linkVal);
+            rot.get(edgeList[i]['from'])['router'].broadcast();
+            prnt(rot.get(edgeList[i]['from'])['router']);
             break;
-        } else if (edgeList.get(i)["to"] == startNode && edgeList.get(i)['from'] == endNode) {
-            updateLinkCost(edgeList.get(i), linkVal);
+        } else if (edgeList[i]["to"] == startNode && edgeList[i]['from'] == endNode) {
+            updateLinkCost(edgeList[i], linkVal);
+            rot.get(edgeList[i]['from'])['router'].broadcast();
+            prnt(rot.get(edgeList[i]['from'])['router']);
             break;
         }
     }
@@ -179,11 +183,21 @@ function updateLinkCost(edge, new_val) {
     edges.update(edge);
 }
 
-function addNode(node, edges) {
-    nodeList.addNode(node, edges)
-    nodes.update()
-    network.redraw()
+function addNode() {
+    var nodeLabel = document.getElementById("start_node_link").value;
+    var nodeId = lToNum(nodeLabel.toLowerCase());
+    var neighbor = lToNum(document.getElementById("start_node_link").value.toLowerCase());
+    var linkVal = document.getElementById("link_value_add").value;
+    var node = {id: nodeId, label: nodeLabel}
+    nodeList.push(node)
+    nodes.update();
+    network.redraw();
+
+    var edge = {id: edgeList.length + 1, from: nodeId, to: neighbor, label: link_val, font: edgeFont, color: edgeColor};
+
 }
+
+
 
 function removeNode(node) {
     nodeList.removeNode(node);
