@@ -87,6 +87,7 @@ function routerLtoNum(router) {
 }
 
 function lToNum(letter) {
+    prnt(letter);
     return letter.charCodeAt(0)-96;
 }
 
@@ -99,7 +100,7 @@ async function trace_route(node_path, sTime) {
     removeAllHighlighting();
     var path = [];
     for(var i = 0; i < node_path.length; i++) {
-        path.push(nodeList[node_path[i]-1]);
+        path.push(nodes.get((node_path[i])));
     }
     for (var i = 0; i < path.length-1; i++) {
         await sleep(sTime);
@@ -167,12 +168,10 @@ function updateLink() {
         if (edgeList[i]["from"] == startNode && edgeList[i]['to'] == endNode) {
             updateLinkCost(edgeList[i], linkVal);
             rot.get(edgeList[i]['from'])['router'].broadcast();
-            prnt(rot.get(edgeList[i]['from'])['router']);
             break;
         } else if (edgeList[i]["to"] == startNode && edgeList[i]['from'] == endNode) {
             updateLinkCost(edgeList[i], linkVal);
             rot.get(edgeList[i]['from'])['router'].broadcast();
-            prnt(rot.get(edgeList[i]['from'])['router']);
             break;
         }
     }
@@ -184,16 +183,45 @@ function updateLinkCost(edge, new_val) {
 }
 
 function addNode() {
-    var nodeLabel = document.getElementById("start_node_link").value;
+    var nodeLabel = document.getElementById("add_node_label").value;
     var nodeId = lToNum(nodeLabel.toLowerCase());
-    var neighbor = lToNum(document.getElementById("start_node_link").value.toLowerCase());
+    var neighbor = lToNum(document.getElementById("neighbor_label").value.toLowerCase());
     var linkVal = document.getElementById("link_value_add").value;
     var node = {id: nodeId, label: nodeLabel}
     nodeList.push(node)
-    nodes.update();
+    nodes.add(node);
+
+    var edge = {id: edgeList.length + 1, from: nodeId, to: neighbor, label: linkVal, font: edgeFont, color: edgeColor};
+    edgeList.push(edge);
+    edges.add(edge);
     network.redraw();
 
-    var edge = {id: edgeList.length + 1, from: nodeId, to: neighbor, label: link_val, font: edgeFont, color: edgeColor};
+    let tmp = new Router(nodeLabel.toLowerCase());
+    let neighborRouter = rot.get(neighbor)['router'];
+    var rtr_tmp = {id: nodeId, router: tmp}; 
+    rtr.push(rtr_tmp);
+    rot.add(rtr_tmp);
+    
+    fillRouter(tmp);
+
+    neighborRouter.broadcast();
+    tmp.broadcast();
+
+    // a.broadcast();
+    // b.broadcast();
+    // c.broadcast();
+    // d.broadcast();
+    // e.broadcast();
+    // f.broadcast();
+    // g.broadcast();
+    // h.broadcast();
+    // i.broadcast();
+    // j.broadcast();
+    // k.broadcast();
+    // l.broadcast();
+    // m.broadcast();
+    // n.broadcast();
+    // tmp.broadcast();
 
 }
 
@@ -227,6 +255,8 @@ class Router {
         this.numNodes = 0;
         this.dMatrix = [[0]]
         this.updateEvents = []
+        this.dMatrixIndecies = {}
+        this.dMatrixIndecies[name] = 0;
 
         // Hacky way to bind class context to each method
         this.addNeighbor = this.addNeighbor.bind(this)
@@ -252,7 +282,9 @@ class Router {
 
         this.numNodes += 1;
         this.neighbors[neighbor.name] = cost
-        this.nodes[neighbor.name] = this.numNodes
+        this.nodes[neighbor.name] = this.numNodes;
+        var length = Object.keys(this.dMatrixIndecies).length;
+        this.dMatrixIndecies[neighbor.name] = length;
         this._addNeighborToMatrix(cost)
         this._subscribeEvent(neighbor.update)
         this.forwardingTable[neighbor.name] = neighbor.name
@@ -265,7 +297,7 @@ class Router {
         for(var i=0; i<this.dMatrix[0].length; i++) {
             emptyColumnRow.push(null);
         }
-
+        // this.dMatrix.push(emptyColumnRow);
         for(var row=1; row<this.dMatrix.length; row++) {
             this.dMatrix[row] = jQuery.extend(true, [], emptyColumnRow)
         }
@@ -278,11 +310,19 @@ class Router {
     }
 
     _getCost(src, dest) {
-        return this.dMatrix[this.nodes[src]][this.nodes[dest]];
+
+        // console.log("getcost")
+        // console.log(src)
+        // console.log(dest)
+        // console.log(this.dMatrixIndecies[src])
+        // console.log(this.nodes[dest])
+        // console.log(this.dMatrix[this.dMatrixIndecies[src]])
+        // console.log(this.dMatrix[this.dMatrixIndecies[src]][this.nodes[dest]])
+        return this.dMatrix[this.dMatrixIndecies[src]][this.nodes[dest]];
     }
 
     _setCost(src, dest, newCost) {
-        this.dMatrix[this.nodes[src]][this.nodes[dest]] = newCost;
+        this.dMatrix[this.dMatrixIndecies[src]][this.nodes[dest]] = newCost;
     }
 
     broadcast() {
@@ -409,9 +449,9 @@ class Router {
 
 prnt = console.log
 
-a = new Router("a")
-b = new Router("b")
-c = new Router("c")
+// a = new Router("a")
+// b = new Router("b")
+// c = new Router("c")
 
 a.addNeighbor(b, 1)
 a.addNeighbor(c, 7)
@@ -496,6 +536,7 @@ let rtr = [
 var rot = new vis.DataSet(rtr);
 
 fillRouter(a);
+
 fillRouter(b);
 fillRouter(c);
 fillRouter(d);
@@ -566,9 +607,12 @@ function startTransmission() {
     // console.log(delayTime);
     var tempNode = startNode;
     var nodeRoute = [];
+    prnt("Starint transmission");
     nodeRoute.push(lToNum(startNode));
+    prnt(rot.get(lToNum(startNode))['router']);
     while (tempNode != endNode) {
         var temp = rot.get(lToNum(tempNode))['router'].forwardingTable[endNode];
+        // prnt(rot.get(lToNum(temp)));
         tempNode = rot.get(lToNum(temp))['router'].name;
         nodeRoute.push(lToNum(tempNode));
     }
