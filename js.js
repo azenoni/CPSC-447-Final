@@ -236,6 +236,7 @@ function addLink() {
     neighborRouter.broadcast();
     
     rot.get(toNode)['router'].broadcast();
+    broadcastAll();
 }
 
 function addNode() {
@@ -262,6 +263,7 @@ function addNode() {
 
     neighborRouter.broadcast();
     tmp.broadcast();
+    broadcastAll();
 
 }
 
@@ -497,57 +499,57 @@ class Router {
 prnt = console.log
 strprnt = (obj) => prnt(JSON.stringify(obj))
 
-a = new Router("a")
-b = new Router("b")
-c = new Router("c")
+// a = new Router("a")
+// b = new Router("b")
+// c = new Router("c")
 
-a.addNeighbor(b, 1)
-a.addNeighbor(c, 7)
-b.addNeighbor(c, 3)
+// a.addNeighbor(b, 1)
+// a.addNeighbor(c, 7)
+// b.addNeighbor(c, 3)
 
-a.broadcast()
-b.broadcast()
-c.broadcast()
-a.broadcast()
-b.broadcast()
-c.broadcast()
+// a.broadcast()
+// b.broadcast()
+// c.broadcast()
+// a.broadcast()
+// b.broadcast()
+// c.broadcast()
 
-prnt(JSON.stringify(a.neighbors))
-prnt(JSON.stringify(a))
-prnt(JSON.stringify(a.dMatrix))
-prnt(JSON.stringify(b.dMatrix))
-prnt(JSON.stringify(c.dMatrix))
+// prnt(JSON.stringify(a.neighbors))
+// prnt(JSON.stringify(a))
+// prnt(JSON.stringify(a.dMatrix))
+// prnt(JSON.stringify(b.dMatrix))
+// prnt(JSON.stringify(c.dMatrix))
 
-c.changeLinkCost(a, 1)
-b.forceRefresh()
-a.broadcast()
-b.broadcast()
-c.broadcast()
-a.broadcast()
-b.broadcast()
-c.broadcast()
+// c.changeLinkCost(a, 1)
+// b.forceRefresh()
+// a.broadcast()
+// b.broadcast()
+// c.broadcast()
+// a.broadcast()
+// b.broadcast()
+// c.broadcast()
 
-prnt(JSON.stringify(a.neighbors))
-prnt(JSON.stringify(a))
-prnt(JSON.stringify(a.dMatrix))
-prnt(JSON.stringify(b.dMatrix))
-prnt(JSON.stringify(c.dMatrix))
+// prnt(JSON.stringify(a.neighbors))
+// prnt(JSON.stringify(a))
+// prnt(JSON.stringify(a.dMatrix))
+// prnt(JSON.stringify(b.dMatrix))
+// prnt(JSON.stringify(c.dMatrix))
 
 
-c.changeLinkCost(a, 7)
-b.forceRefresh()
-a.broadcast()
-b.broadcast()
-c.broadcast()
-a.broadcast()
-b.broadcast()
-c.broadcast()
+// c.changeLinkCost(a, 7)
+// b.forceRefresh()
+// a.broadcast()
+// b.broadcast()
+// c.broadcast()
+// a.broadcast()
+// b.broadcast()
+// c.broadcast()
 
-prnt(JSON.stringify(a.neighbors))
-prnt(JSON.stringify(a))
-prnt(JSON.stringify(a.dMatrix))
-prnt(JSON.stringify(b.dMatrix))
-prnt(JSON.stringify(c.dMatrix))
+// prnt(JSON.stringify(a.neighbors))
+// prnt(JSON.stringify(a))
+// prnt(JSON.stringify(a.dMatrix))
+// prnt(JSON.stringify(b.dMatrix))
+// prnt(JSON.stringify(c.dMatrix))
 
 /////////
 
