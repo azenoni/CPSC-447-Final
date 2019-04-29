@@ -161,22 +161,22 @@ function removeAllHighlighting() {
 }
 
 function forceRefreshAll() {
-    for(var i=0; i<edgeList.length; i++){
-        var router = rot.get(edgeList[i]['from'])['router'];
+    for(var i=0; i<rtr.length; i++){ 
+        var router = rot.get(rtr[i]['id'])['router'];
         router.forceRefresh()
     }
 }
 
 function broadcastAll() {
-    for(var i=0; i<edgeList.length; i++){
-        var router = rot.get(edgeList[i]['from'])['router'];
+    for(var i=0; i<rtr.length; i++){ 
+        var router = rot.get(rtr[i]['id'])['router'];
         router.broadcast()
     }
 }
 
 function prntAll() {
-    for(var i=0; i<edgeList.length; i++){
-        var router = rot.get(edgeList[i]['from'])['router'];
+    for(var i=0; i<rtr.length; i++){ 
+        var router = rot.get(rtr[i]['id'])['router'];
         prnt(router)
     }
 }
