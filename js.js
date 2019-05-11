@@ -1,3 +1,6 @@
+///// Initial Topology Setup
+////////////////////////////
+
 // create an array with nodes
 prnt = console.log
 let nodeList = [
@@ -44,6 +47,9 @@ let edgeList = [
     {id: 16, from: 7, to: 5, label:"1", font:edgeFont, color: edgeColor},
 ];
 
+///// Generate Network Visualization
+////////////////////////////////////
+
 var edges = new vis.DataSet(edgeList);
 
 // create a network
@@ -63,24 +69,10 @@ var options = {
 // initialize your network!
 var network = new vis.Network(container, data, options);
 network.on( 'click', function(properties) {
-    // var node_ids = properties.nodes;
-    // var edge_ids = properties.edges;
-    // var clickedNodes = nodes.get(node_ids);
-    // // console.log('clicked nodes:', clickedNodes);
-    // var clickedEdges = edges.get(edge_ids);
-    // if (clickedEdges.length !== 0 && clickedNodes.length === 0) {
-    //     var edge = edges.get(edge_ids)[0];
-    //     removeAllHighlighting();
-    //     highlightEdge(edge, 'red');
-    //     // network.selectNodes([1], [true]);
-    // }
-    // if (clickedNodes.length !== 0) {
-    //     let node = nodes.get(node_ids)[0];
-    //     highlightAllEdges(node);
-    // }
-    //
-    // console.log('clicked edges:', clickedEdges);
 });
+
+///// Hook up event handlers
+////////////////////////////////////
 
 function routerLtoNum(router) {
     return (router.name.charCodeAt(0)-96);
@@ -267,7 +259,6 @@ function addNode() {
 
 }
 
-
 function changeEdgeBackground(edge) {
     edge['font']['background'] = 'lime';
     edges.update(edge);
@@ -279,6 +270,8 @@ function changeEdgeBackground(edge) {
     }
 }
 
+///// Router class implementing Belman-Ford
+///////////////////////////////////////////
 
 class Router {
     constructor(name) {
@@ -346,14 +339,6 @@ class Router {
     }
 
     _getCost(src, dest) {
-
-        // console.log("getcost")
-        // console.log(src)
-        // console.log(dest)
-        // console.log(this.dMatrixIndecies[src])
-        // console.log(this.nodes[dest])
-        // console.log(this.dMatrix[this.dMatrixIndecies[src]])
-        // console.log(this.dMatrix[this.dMatrixIndecies[src]][this.nodes[dest]])
         return this.dMatrix[this.dMatrixIndecies[src]][this.nodes[dest]];
     }
 
@@ -499,59 +484,9 @@ class Router {
 prnt = console.log
 strprnt = (obj) => prnt(JSON.stringify(obj))
 
-// a = new Router("a")
-// b = new Router("b")
-// c = new Router("c")
 
-// a.addNeighbor(b, 1)
-// a.addNeighbor(c, 7)
-// b.addNeighbor(c, 3)
-
-// a.broadcast()
-// b.broadcast()
-// c.broadcast()
-// a.broadcast()
-// b.broadcast()
-// c.broadcast()
-
-// prnt(JSON.stringify(a.neighbors))
-// prnt(JSON.stringify(a))
-// prnt(JSON.stringify(a.dMatrix))
-// prnt(JSON.stringify(b.dMatrix))
-// prnt(JSON.stringify(c.dMatrix))
-
-// c.changeLinkCost(a, 1)
-// b.forceRefresh()
-// a.broadcast()
-// b.broadcast()
-// c.broadcast()
-// a.broadcast()
-// b.broadcast()
-// c.broadcast()
-
-// prnt(JSON.stringify(a.neighbors))
-// prnt(JSON.stringify(a))
-// prnt(JSON.stringify(a.dMatrix))
-// prnt(JSON.stringify(b.dMatrix))
-// prnt(JSON.stringify(c.dMatrix))
-
-
-// c.changeLinkCost(a, 7)
-// b.forceRefresh()
-// a.broadcast()
-// b.broadcast()
-// c.broadcast()
-// a.broadcast()
-// b.broadcast()
-// c.broadcast()
-
-// prnt(JSON.stringify(a.neighbors))
-// prnt(JSON.stringify(a))
-// prnt(JSON.stringify(a.dMatrix))
-// prnt(JSON.stringify(b.dMatrix))
-// prnt(JSON.stringify(c.dMatrix))
-
-/////////
+///// Hooking up routing logic to front end
+///////////////////////////////////////////
 
 a = new Router("a");
 b = new Router("b");
@@ -617,22 +552,6 @@ k.broadcast();
 l.broadcast();
 m.broadcast();
 n.broadcast();
-
-// To check forwarding tables
-// prnt(a);
-// prnt(b);
-// prnt(c);
-// prnt(d);
-// prnt(e);
-// prnt(f);
-// prnt(g);
-// prnt(h);
-// prnt(i);
-// prnt(j);
-// prnt(k);
-// prnt(l);
-// prnt(m);
-// prnt(n);
 
 //Adds all neighbors to router form edges(EdgeList)
 function fillRouter(router) {
